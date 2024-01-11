@@ -1,4 +1,4 @@
-package de.unknowncity.ucvelocity.core.data.entity;
+package de.unknowncity.ucbans.data.entity;
 
 import java.util.UUID;
 

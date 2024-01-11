@@ -1,6 +1,6 @@
-package de.unknowncity.ucbans.data.furure;
+package de.unknowncity.ucbans.data.future;
 
-import org.bukkit.plugin.Plugin;
+import de.unknowncity.ucbans.UCBansPlugin;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -18,16 +18,16 @@ public class BukkitFutureResult<T> {
         return new BukkitFutureResult<>(completableFuture);
     }
 
-    public void whenComplete(Plugin plugin, Consumer<? super T> callback, Consumer<Throwable> throwableConsumer) {
-        var executor = (Executor) r -> plugin.getServer().getScheduler().runTask(plugin, r);
+    public void whenComplete(UCBansPlugin plugin, Consumer<? super T> callback, Consumer<Throwable> throwableConsumer) {
+        var executor = (Executor) r -> plugin.server().getScheduler().buildTask(plugin, r).schedule();
         this.completableFuture.thenAcceptAsync(callback, executor).exceptionally(throwable -> {
             throwableConsumer.accept(throwable);
             return null;
         });
     }
 
-    public void whenComplete(Plugin plugin, Consumer<? super T> callback) {
+    public void whenComplete(UCBansPlugin plugin, Consumer<? super T> callback) {
         whenComplete(plugin, callback, throwable ->
-                plugin.getLogger().log(Level.SEVERE, "Exception in Future Result", throwable));
+                plugin.logger().log(Level.SEVERE, "Exception in Future Result", throwable));
     }
 }

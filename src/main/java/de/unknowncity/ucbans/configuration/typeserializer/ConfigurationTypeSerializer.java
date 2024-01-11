@@ -1,6 +1,7 @@
-package de.unknowncity.ucvelocity.core.configuration.typeserializer;
+package de.unknowncity.ucbans.configuration.typeserializer;
 
-import de.unknowncity.ucvelocity.core.configuration.Configuration;
+import de.unknowncity.ucbans.configuration.Configuration;
+import de.unknowncity.ucbans.configuration.settings.DataBaseSettings;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -11,8 +12,10 @@ import java.lang.reflect.Type;
 public class ConfigurationTypeSerializer implements TypeSerializer<Configuration> {
     @Override
     public Configuration deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        return new Configuration(
+        var databaseSettings = node.node("database").get(DataBaseSettings.class);
 
+        return new Configuration(
+                databaseSettings
         );
     }
 

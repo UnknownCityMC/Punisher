@@ -1,15 +1,15 @@
-package dev.thezexquex.yasmpp.core.command;
+package de.unknowncity.ucbans.core.command;
 
 import cloud.commandframework.CommandManager;
-import dev.thezexquex.yasmpp.YasmpPlugin;
-import org.bukkit.command.CommandSender;
+import com.velocitypowered.api.command.CommandSource;
+import de.unknowncity.ucbans.UCBansPlugin;
 
 public abstract class BaseCommand {
-    protected final YasmpPlugin plugin;
+    protected final UCBansPlugin plugin;
 
-    public BaseCommand(YasmpPlugin plugin) {
+    public BaseCommand(UCBansPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public abstract void register(CommandManager<CommandSender> commandManager);
+    public abstract void register(CommandManager<CommandSource> commandManager);
 }

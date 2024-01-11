@@ -1,8 +1,7 @@
-package de.unknowncity.ucvelocity.core.message;
+package de.unknowncity.ucbans.message;
 
 import com.velocitypowered.api.command.CommandSource;
-import de.unknowncity.ucvelocity.UCVelocityPlugin;
-import de.unknowncity.ucvelocity.core.hooks.PluginHookService;
+import de.unknowncity.ucbans.UCBansPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -10,20 +9,21 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.title.Title;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.NodePath;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
 
 public class Messenger {
     private final ConfigurationNode rootNode;
     private final MiniMessage miniMessage;
-    private final UCVelocityPlugin plugin;
-    private final PluginHookService pluginHookService;
+    private final UCBansPlugin plugin;
 
-    public Messenger(UCVelocityPlugin plugin, ConfigurationNode rootNode) {
+    public Messenger(UCBansPlugin plugin, ConfigurationNode rootNode) {
         this.plugin = plugin;
         this.rootNode = rootNode;
         this.miniMessage = MiniMessage.miniMessage();
-        this.pluginHookService = plugin.pluginHookService();
     }
 
     public String getString(NodePath path) {
@@ -35,16 +35,30 @@ public class Messenger {
         return prefixString == null ? Component.text("N/A prefix") : miniMessage.deserialize(prefixString);
     }
 
-    public Component component(NodePath path, CommandSource source, TagResolver... resolvers) {
-        var messageString = rootNode.node(path).getString();
-        if (messageString == null) {
+    public Component componentFromList(NodePath path, TagResolver... resolvers) {
+        List<String> messageStringList = null;
+        try {
+            messageStringList = rootNode.node(path).getList(String.class);
+        } catch (SerializationException e) {
             return Component.text("N/A " + path);
         }
-        return miniMessage.deserialize(
-                messageString,
-                TagResolver.resolver(resolvers),
-                TagResolver.resolver(Placeholder.component("prefix", prefix()))
-        );
+
+        if (messageStringList == null) {
+            return Component.text("N/A " + path);
+        }
+
+        var component = Component.text();
+        plugin.logger().info(messageStringList.toString());
+
+        messageStringList.forEach(messageString -> {
+            component.appendNewline();
+            component.append(miniMessage.deserialize(
+                    messageString,
+                    TagResolver.resolver(resolvers),
+                    TagResolver.resolver(Placeholder.component("prefix", prefix()))
+            ));
+        });
+        return component.build();
     }
 
     public Component component(NodePath path, TagResolver... resolvers) {
@@ -61,8 +75,8 @@ public class Messenger {
 
     public void sendTitle(CommandSource source, NodePath pathTitle, NodePath pathSubTitle, TagResolver... tagResolvers) {
         var title = Title.title(
-                pathTitle == null ? Component.empty() : component(pathTitle, source, tagResolvers),
-                pathSubTitle == null ? Component.empty() : component(pathSubTitle, source, tagResolvers)
+                pathTitle == null ? Component.empty() : component(pathTitle,tagResolvers),
+                pathSubTitle == null ? Component.empty() : component(pathSubTitle, tagResolvers)
         );
         source.showTitle(title);
     }
@@ -76,7 +90,7 @@ public class Messenger {
     }
 
     public void sendActionBar(CommandSource source, NodePath path, TagResolver... tagResolvers) {
-        source.sendActionBar(this.component(path, source, tagResolvers));
+        source.sendActionBar(this.component(path, tagResolvers));
     }
 
     public void sendMessage(CommandSource sender, NodePath path, TagResolver... tagResolvers) {

@@ -1,6 +1,6 @@
-package de.unknowncity.ucvelocity.core.configuration;
+package de.unknowncity.ucbans.configuration;
 
-import de.unknowncity.ucvelocity.UCVelocityPlugin;
+import de.unknowncity.ucbans.UCBansPlugin;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -11,11 +11,11 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 public class ConfigurationLoader {
-    private final UCVelocityPlugin plugin;
+    private final UCBansPlugin plugin;
     private ConfigurationNode mainConfigRootNode;
     private ConfigurationNode messageConfigRootNode;
 
-    public ConfigurationLoader(UCVelocityPlugin plugin) {
+    public ConfigurationLoader(UCBansPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -34,7 +34,7 @@ public class ConfigurationLoader {
             return;
         }
 
-        try (var resourceAsStream = getClass().getResourceAsStream(filePath.toString())) {
+        try (var resourceAsStream = getClass().getResourceAsStream("/" + filePath)) {
             if (resourceAsStream == null) {
                 plugin.logger().log(
                         Level.SEVERE, "Failed to save " + filePath + ". " +

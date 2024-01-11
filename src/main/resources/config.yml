@@ -1,0 +1,10 @@
+database:
+  driver: "mariadb"
+  host: "localhost"
+  port: "3306"
+  db: "uc-bans"
+  username: "uc"
+  password: "supersecretpassword"
+  hikari:
+    max-pool-size: 3
+    min-idle-connections: 1

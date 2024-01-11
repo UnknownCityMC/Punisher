@@ -1,0 +1,42 @@
+prefix: "<white>[<gradient:#545454:#dbdbdb>UnknownCity<white>]"
+command:
+  clearhistory:
+    success: "<prefix><green>Punishment History von <yellow><player> <green> gelöscht!"
+punishment:
+  kick:
+     disconnect:
+       - "<prefix>"
+       - ""
+       - "<red>Du wurdest von"
+       - "<yellow><punisher>"
+       - "<red>gekickt!"
+       - "<red>Grund: <yellow><reason>"
+  ban:
+    disconnect:
+      - "<prefix>"
+      - ""
+      - "<red>Du wurdest von"
+      - "<yellow><punisher>"
+      - "<red>gebannt!"
+      - "<red>Grund: <yellow><reason>"
+  history:
+    empty: "<red>Keine Bestrafungen gefunden"
+    header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
+    entry: "<red><type> <gray>Aktiv: <yellow><active> <gray>Am <yellow><on> <gray>bis <yellow><till> <gray>von <yellow><by> <grey>für <yellow><reason>"
+    footer: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
+exception:
+  invalid-syntax: " <red>Bitte benutze <yellow><valid-syntax>"
+  invalid-sender: " <red>Dieser Command darf nur von <yellow><valid-sender> <red>ausgeführt werden"
+  invalid-argument: " <red>Invalides Argument: <yellow><cause>"
+  no-permission: " <red>Dir fehlt die Berechtigung <yellow><missing-permission>"
+  argument-parse:
+    no-input: "<red>Kein Input angegeben"
+    boolean: "<yellow>'{input}' <red>ist kein boolean"
+    number: "'{input}' <red>is not a valid number in the range {min} to {max}"
+    char: "'{input}' is not a valid character"
+    enum: "'{input}' is not one of the following: {acceptableValues}"
+    string: "'{input}' is not a valid string of type {stringMode}"
+    uuid: "'{input}' is not a valid UUID"
+    regex: "'{input}' does not match '{pattern}'"
+    color: "'{input}' is not a valid color"
+    duration: "'{input}' is not a duration format"

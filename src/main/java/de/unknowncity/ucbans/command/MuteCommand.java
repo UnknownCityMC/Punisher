@@ -8,15 +8,15 @@ import com.velocitypowered.api.command.CommandSource;
 import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.core.command.BaseCommand;
 
-public class BanCommand extends BaseCommand {
-    public BanCommand(UCBansPlugin plugin) {
+public class MuteCommand extends BaseCommand {
+    public MuteCommand(UCBansPlugin plugin) {
         super(plugin);
     }
 
     @Override
     public void register(CommandManager<CommandSource> commandManager) {
-        commandManager.command(commandManager.commandBuilder("ban")
-                .permission("ucbans.command.ban")
+        commandManager.command(commandManager.commandBuilder("mute")
+                .permission("ucbans.command.mute")
                 .argument(StringArgument.single("player"))
                 .argument(DurationArgument.of("duration"))
                 .argument(StringArgument.greedy("reason"))
