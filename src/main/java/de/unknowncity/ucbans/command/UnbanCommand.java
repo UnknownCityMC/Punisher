@@ -31,8 +31,16 @@ public class UnbanCommand extends BaseCommand {
         var playerName = (String) commandSourceCommandContext.get("player");
 
         BukkitFutureResult.of(UUIDFetcher.fetchUUID(playerName)).whenComplete(plugin, uuid -> {
-            if (plugin.punishmentService().isBanned(uuid)) {
-                plugin.punishmentService().unban(uuid);
+            if (uuid.isEmpty()) {
+                plugin.messenger().sendMessage(
+                        sender,
+                        NodePath.path("fetch", "uuid", "not-exists"),
+                        TagResolver.resolver("player", Tag.preProcessParsed(playerName))
+                );
+                return;
+            }
+            if (plugin.punishmentService().isBanned(uuid.get())) {
+                plugin.punishmentService().unban(uuid.get());
                 plugin.messenger().sendMessage(
                         sender,
                         NodePath.path("command", "unban", "success"),

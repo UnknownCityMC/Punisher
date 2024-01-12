@@ -35,7 +35,15 @@ public class HistoryCommand extends BaseCommand {
         var playerName = (String) commandSourceCommandContext.get("player");
 
         BukkitFutureResult.of(UUIDFetcher.fetchUUID(playerName)).whenComplete(plugin, uuid -> {
-            var punishments = plugin.punishmentService().getCachedPunishmentsForPlayer(uuid);
+            if (uuid.isEmpty()) {
+                plugin.messenger().sendMessage(
+                        sender,
+                        NodePath.path("fetch", "uuid", "not-exists"),
+                        TagResolver.resolver("player", Tag.preProcessParsed(playerName))
+                );
+                return;
+            }
+            var punishments = plugin.punishmentService().getCachedPunishmentsForPlayer(uuid.get());
 
             plugin.messenger().sendMessage(
                     sender,

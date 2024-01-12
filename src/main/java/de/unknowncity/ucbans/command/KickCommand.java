@@ -8,10 +8,9 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.core.command.BaseCommand;
-import de.unknowncity.ucbans.punishment.types.KickPunishment;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.spongepowered.configurate.NodePath;
 
 public class KickCommand extends BaseCommand {
     public KickCommand(UCBansPlugin plugin) {
@@ -29,11 +28,17 @@ public class KickCommand extends BaseCommand {
     }
 
     private void handleKick(CommandContext<CommandSource> commandSourceCommandContext) {
+        var sender = commandSourceCommandContext.getSender();
         var player = (Player) commandSourceCommandContext.get("player");
         var punisher = commandSourceCommandContext.getSender();
 
         var reason = (String) commandSourceCommandContext.get("reason");
 
         plugin.punishmentService().kickPlayer(player, reason, punisher);
+        plugin.messenger().sendMessage(
+                sender,
+                NodePath.path("command", "kick", "success"),
+                TagResolver.resolver("player", Tag.preProcessParsed(player.getUsername()))
+        );
     }
 }

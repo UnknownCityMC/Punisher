@@ -12,7 +12,6 @@ import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.NodePath;
 
-
 public class ClearHistoryCommand extends BaseCommand {
     public ClearHistoryCommand(UCBansPlugin plugin) {
         super(plugin);
@@ -32,7 +31,15 @@ public class ClearHistoryCommand extends BaseCommand {
         var playerName = (String) commandSourceCommandContext.get("player");
 
         BukkitFutureResult.of(UUIDFetcher.fetchUUID(playerName)).whenComplete(plugin, uuid -> {
-            plugin.punishmentService().clearPunishmentHistory(uuid);
+            if (uuid.isEmpty()) {
+                plugin.messenger().sendMessage(
+                        sender,
+                        NodePath.path("fetch", "uuid", "not-exists"),
+                        TagResolver.resolver("player", Tag.preProcessParsed(playerName))
+                );
+                return;
+            }
+            plugin.punishmentService().clearPunishmentHistory(uuid.get());
             plugin.messenger().sendMessage(
                     sender,
                     NodePath.path("command", "clearhistory", "success"),
