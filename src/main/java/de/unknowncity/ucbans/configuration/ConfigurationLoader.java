@@ -30,7 +30,7 @@ public class ConfigurationLoader {
 
     public void saveDefaultConfigFile(Path filePath) {
         var completePath = plugin.dataDirectory().resolve(filePath);
-        if (Files.exists(completePath)) {
+        if (Files.exists(completePath) && !UCBansPlugin.IS_DEV_BUILD) {
             return;
         }
 

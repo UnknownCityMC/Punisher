@@ -65,6 +65,8 @@ public class UCBansPlugin {
 
     private Path dataDirectory;
 
+    public static final boolean IS_DEV_BUILD = true;
+
     @Inject
     public UCBansPlugin(ProxyServer proxyServer, Logger logger, @DataDirectory Path dataDirectory) {
         this.proxyServer = proxyServer;
