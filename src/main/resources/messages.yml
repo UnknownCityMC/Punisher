@@ -1,6 +1,14 @@
 prefix: "<white>[<gradient:#545454:#dbdbdb>UnknownCity<white>]"
+fetch:
+  uuid:
+    not-exists: "<prefix> <red>Ein Spieler namens <yellow><player> <red>existiert nicht!"
 command:
+  mute:
+    success: "<prefix> <yellow><player> <green>wurde gemuted!"
+  kick:
+    success: "<prefix> <yellow><player> <green>wurde gekickt"
   ban:
+    success: "<prefix> <yellow><player> <green>wurde gebannt"
     overview:
       header: "<white><st>                              <reset><white> [<yellow>Strafe<white>] <st>                              <br>"
       entry: "<yellow><id> <gray>» <red><reason>"
@@ -105,6 +113,8 @@ punishment:
       - ""
       - ""
       - "<st><gray>                                                                     "
+  mute:
+    chat-attempt: "<prefix> Du bist bis noch <yellow><remaining> <red>gemuted!"
   history:
     empty: "<red>Keine Bestrafungen gefunden"
     header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
