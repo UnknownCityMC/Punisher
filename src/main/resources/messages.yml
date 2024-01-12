@@ -1,7 +1,15 @@
 prefix: "<white>[<gradient:#545454:#dbdbdb>UnknownCity<white>]"
 command:
+  ban:
+    overview:
+      header: "<white><st>                              <reset><white> [<yellow>Strafe<white>] <st>                              <br>"
+      entry: "<yellow><id> <gray>» <red><reason>"
+      footer: "<br><white><st>                              <reset><white> [<yellow>Strafe<white>] <st>                              "
+  unban:
+    success: "<prefix> <yellow><player> <green>wurde entbannt"
+    not-banned: "<prefix> <yellow><player> <red>ist nicht gebannt"
   clearhistory:
-    success: "<prefix><green>Punishment History von <yellow><player> <green> gelöscht!"
+    success: "<prefix> <green>Punishment History von <yellow><player> <green> gelöscht!"
 punishment:
   kick:
     disconnect:
@@ -33,7 +41,7 @@ punishment:
       - ""
       - "<red>Du kannst einen Entbannungsantrag auf unserem Discord Server stellen"
       - ""
-      - "<yellow>discord.unknowncity.de"
+      - "<yellow>dc.unknowncity.de"
       - ""
       - ""
       - "<st><gray>                                                                     "
@@ -52,7 +60,7 @@ punishment:
       - ""
       - "<red>Du kannst einen Entbannungsantrag auf unserem Discord Server stellen"
       - ""
-      - "<yellow>discord.unknowncity.de"
+      - "<yellow>dc.unknowncity.de"
       - ""
       - ""
       - "<st><gray>                                                                     "
@@ -73,7 +81,7 @@ punishment:
       - ""
       - "<red>Du kannst einen Entbannungsantrag auf unserem Discord Server stellen"
       - ""
-      - "<yellow>discord.unknowncity.de"
+      - "<yellow>dc.unknowncity.de"
       - ""
       - ""
       - "<st><gray>                                                                     "
@@ -93,14 +101,14 @@ punishment:
       - ""
       - "<red>Du kannst einen Entbannungsantrag auf unserem Discord Server stellen"
       - ""
-      - "<yellow>discord.unknowncity.de"
+      - "<yellow>dc.unknowncity.de"
       - ""
       - ""
       - "<st><gray>                                                                     "
   history:
     empty: "<red>Keine Bestrafungen gefunden"
     header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
-    entry: "<red><type> <gray>Aktiv: <yellow><active> <gray>Am <yellow><on> <gray>bis <yellow><till> <gray>von <yellow><by> <grey>für <yellow><reason>"
+    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till>'><gray>» <red><type> <gray>Aktiv: <yellow><active> <gray>von <yellow><by> <grey>für <yellow><reason></hover>"
     footer: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
 exception:
   invalid-syntax: " <red>Bitte benutze <yellow><valid-syntax>"
@@ -118,3 +126,5 @@ exception:
     regex: "'{input}' does not match '{pattern}'"
     color: "'{input}' is not a valid color"
     duration: "'{input}' is not a duration format"
+format:
+  time: "%s d %sh %sm %ss"

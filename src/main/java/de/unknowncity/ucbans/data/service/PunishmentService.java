@@ -7,15 +7,15 @@ import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.data.database.dao.PunishmentDao;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.Punishment;
+import de.unknowncity.ucbans.punishment.PunishmentLevel;
+import de.unknowncity.ucbans.punishment.PunishmentTemplate;
 import de.unknowncity.ucbans.punishment.PunishmentType;
 import de.unknowncity.ucbans.punishment.types.*;
 import de.unknowncity.ucbans.util.UUIDFetcher;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class PunishmentService {
@@ -24,7 +24,7 @@ public class PunishmentService {
     private final Messenger messenger;
     private final UCBansPlugin plugin;
 
-    private final Set<Punishment> cachedPunishments;
+    private Set<Punishment> cachedPunishments;
 
     public PunishmentService(PunishmentDao punishmentDao, ProxyServer proxyServer, Messenger messenger, UCBansPlugin plugin) {
         this.punishmentDao = punishmentDao;
@@ -77,35 +77,38 @@ public class PunishmentService {
         applyPunishment(kickPunishment);
     }
 
-    public void banPlayer(UUID targetUUID, String targetName, String reason, CommandSource punisher, LocalDateTime banEnd) {
-        var banPunishment = new TempBanPunishment(
-                targetUUID,
-                punisher instanceof Player punisherPlayer ? punisherPlayer.getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                targetName,
-                punisher instanceof Player punisherPlayer ? punisherPlayer.getUsername() : "CONSOLE",
-                reason,
-                true,
-                LocalDateTime.now(),
-                banEnd
-        );
+    public void banPlayer(UUID targetUUID, String targetName, CommandSource punisher, PunishmentTemplate punishmentTemplate) {
+        var punishmentLevels = punishmentTemplate.punishmentLevels();
+        var previousConvicts = previousConvicts(targetUUID, punishmentTemplate.reason());
+        var punishmentLevel = decidePunishmentLevel(targetUUID, previousConvicts, punishmentLevels);
 
-        applyPunishment(banPunishment);
-    }
-
-    public void banPlayerPermanent(UUID targetUUID, String targetName, String reason, CommandSource punisher) {
         var banPunishment = new BanPunishment(
                 targetUUID,
                 punisher instanceof Player punisherPlayer ? punisherPlayer.getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000"),
                 targetName,
                 punisher instanceof Player punisherPlayer ? punisherPlayer.getUsername() : "CONSOLE",
-                reason,
+                punishmentTemplate.reason(),
                 true,
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                punishmentLevel.durationInSeconds()
+
         );
 
         applyPunishment(banPunishment);
     }
 
+    public PunishmentLevel decidePunishmentLevel(UUID uuid, long previousConvicts, Set<PunishmentLevel> punishmentLevels) {
+        var possibleExactPunishmentLevel = punishmentLevels.stream().filter(punishmentLevel -> punishmentLevel.level() == previousConvicts + 1).findFirst();
+        return possibleExactPunishmentLevel.orElseGet(() -> punishmentLevels.stream().max(Comparator.comparingInt(PunishmentLevel::level)).get());
+    }
+
+    public long previousConvicts(UUID targetUUID, String reason) {
+        return getCachedPunishmentsForPlayer(targetUUID).stream()
+                .filter(punishment -> punishment.reason().equals(reason))
+                .count();
+    }
+
+    /*
     public void mutePlayer(UUID targetUUID, String reason, CommandSource punisher, LocalDateTime muteEnd) {
         UUIDFetcher.fetchName(targetUUID).thenAcceptAsync(playerName -> {
             var mutePunishment = new MutePunishment(
@@ -123,42 +126,69 @@ public class PunishmentService {
         });
     }
 
-    public CompletableFuture<Boolean> isMuted(UUID uuid) {
-        return punishmentDao.getPunishments(uuid).thenApply(punishments -> punishments.stream()
-                .filter(punishment -> punishment.punishmentType() == PunishmentType.MUTE)
-                .anyMatch(Punishment::active));
+     */
+
+    public boolean isMuted(UUID uuid) {
+        return isPunished(uuid, PunishmentType.MUTE);
     }
 
     public boolean isBanned(UUID uuid) {
-        var userPunishments = cachedPunishments.stream()
-                .filter(punishment -> punishment.playerUniqueId().equals(uuid))
-                .filter(punishment -> punishment.punishmentType() == PunishmentType.TEMP_BAN || punishment.punishmentType() == PunishmentType.BAN)
+        return isPunished(uuid, PunishmentType.BAN);
+    }
+
+    public void unban(UUID uuid) {
+        unPunish(uuid, PunishmentType.BAN);
+    }
+
+    public void unPunish(UUID uuid, PunishmentType punishmentType) {
+        var userPunishments = getCachedPunishmentsForPlayer(uuid).stream()
+                .filter(punishment -> punishment.punishmentType() == punishmentType)
                 .filter(Punishment::active).toList();
 
-
-        var banned = userPunishments.stream()
-                .anyMatch(punishment -> ((punishment instanceof TimedPunishment timedPunishment) &&
-                        timedPunishment.punishmentEndDateTime().isAfter(LocalDateTime.now())) ||
-                        (punishment instanceof InfinitePunishment));
-
-        plugin.server().getScheduler().buildTask(plugin, () -> {
-            userPunishments.stream()
-                    .filter(punishment -> punishment instanceof TimedPunishment)
-                    .filter(punishment -> ((TimedPunishment) punishment).punishmentEndDateTime().isBefore(LocalDateTime.now()))
-                    .forEach(timedPunishment-> {
-                        var punishment = timedPunishment.active(false);
-                        punishmentDao.updatePunishment(punishment);
-                    });
+        userPunishments.forEach(punishment -> {
+            punishment.active(false);
+            punishmentDao.updatePunishment(punishment).thenAcceptAsync(result -> {
+                cachePunishments();
+            });
         });
-
-        return banned;
     }
+
+    public boolean isPunished(UUID uuid, PunishmentType punishmentType) {
+        var userPunishments = getCachedPunishmentsForPlayer(uuid).stream()
+                .filter(punishment -> punishment.punishmentType() == punishmentType)
+                .filter(Punishment::active).toList();
+
+        userPunishments.stream()
+                .filter(punishment -> punishment instanceof PersistentPunishment)
+                .filter(punishment -> ((PersistentPunishment) punishment).durationInSeconds() != -1)
+                .filter(punishment -> punishment.punishmentDateTime().plus(Duration.ofSeconds(((PersistentPunishment) punishment).durationInSeconds())).isBefore(LocalDateTime.now()))
+                .forEach(persistantPunishment-> {
+                    persistantPunishment.active(false);
+                    punishmentDao.updatePunishment(persistantPunishment).thenAcceptAsync(result -> {
+                        cachePunishments();
+                    });
+                });
+
+        userPunishments = getCachedPunishmentsForPlayer(uuid);
+
+        return userPunishments.stream().filter(punishment -> punishment.punishmentType() == punishmentType).anyMatch(Punishment::active);
+    }
+
+
 
     public Set<Punishment> cachedPunishments() {
         return cachedPunishments;
     }
 
+    public List<Punishment> getCachedPunishmentsForPlayer(UUID uuid) {
+        return cachedPunishments.stream()
+                .filter(punishment -> punishment.playerUniqueId().equals(uuid))
+                .sorted(Comparator.comparing(Punishment::punishmentDateTime))
+                .toList();
+    }
+
     public void cachePunishments() {
+        cachedPunishments = new HashSet<>();
         punishmentDao.getAllPunishments().thenAcceptAsync(cachedPunishments::addAll);
     }
 }

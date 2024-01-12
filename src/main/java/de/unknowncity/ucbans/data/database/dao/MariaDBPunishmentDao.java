@@ -31,7 +31,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                         "punishment_type, " +
                         "punishment_infinite, " +
                         "punishment_date, " +
-                        "punishment_end_date, " +
+                        "punishment_duration, " +
                         "punishment_reason " +
                         "FROM punishment " +
                         "WHERE player_uuid = ?"
@@ -39,16 +39,6 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                 .parameter(statement -> statement.setUuidAsString(playerUniqueId))
                 .readRow(rs ->
                         switch (rs.getEnum("punishment_type", PunishmentType.class)) {
-                            case TEMP_BAN -> new TempBanPunishment(
-                                    rs.getUuidFromString("player_uuid"),
-                                    rs.getUuidFromString("punisher_uuid"),
-                                    rs.getString("player_last_name"),
-                                    rs.getString("punisher_last_name"),
-                                    rs.getString("punishment_reason"),
-                                    rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date"),
-                                    rs.getLocalDateTime("punishment_end_date")
-                            );
                             case BAN -> new BanPunishment(
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
@@ -56,7 +46,8 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
+                                    rs.getLocalDateTime("punishment_date"),
+                                    rs.getInt("punishment_duration")
                             );
                             case KICK -> new KickPunishment(
                                     rs.getUuidFromString("player_uuid"),
@@ -103,7 +94,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                 "punishment_type, " +
                                 "punishment_infinite, " +
                                 "punishment_date, " +
-                                "punishment_end_date, " +
+                                "punishment_duration, " +
                                 "punishment_reason " +
                                 "FROM punishment "
                 )
@@ -117,17 +108,8 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
-                            );
-                            case TEMP_BAN -> new TempBanPunishment(
-                                    rs.getUuidFromString("player_uuid"),
-                                    rs.getUuidFromString("punisher_uuid"),
-                                    rs.getString("player_last_name"),
-                                    rs.getString("punisher_last_name"),
-                                    rs.getString("punishment_reason"),
-                                    rs.getBoolean("active"),
                                     rs.getLocalDateTime("punishment_date"),
-                                    rs.getLocalDateTime("punishment_end_date")
+                                    rs.getInt("punishment_duration")
                             );
                             case KICK -> new KickPunishment(
                                     rs.getUuidFromString("player_uuid"),
@@ -169,20 +151,21 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                 "player_last_name = ?, " +
                                 "punisher_last_name = ?, " +
                                 "punishment_infinite = ?, " +
-                                "punishment_end_date = ?, " +
-                                "punishment_reason = ? " +
+                                "punishment_duration = ?, " +
+                                "punishment_reason = ?, " +
+                                "active = ? " +
                                 "WHERE player_uuid = ? AND " +
                                 "punisher_uuid = ? AND " +
                                 "punishment_type = ? " +
                                 "AND punishment_date = ?"
                 )
                 .parameter(stmt -> {
-                    stmt.setUuidAsString(punishment.playerUniqueId())
-                            .setString(punishment.playerLastName())
+                    stmt.setString(punishment.playerLastName())
                             .setString(punishment.punisherLastName())
-                            .setBoolean(punishment instanceof InfinitePunishment)
-                            .setLocalDateTime(punishment instanceof TimedPunishment persistentPunishment ? persistentPunishment.punishmentEndDateTime() : LocalDateTime.now())
+                            .setBoolean(punishment instanceof PersistentPunishment persistentPunishment && persistentPunishment.durationInSeconds() == -1)
+                            .setInt(punishment instanceof PersistentPunishment persistentPunishment ? persistentPunishment.durationInSeconds() : 0)
                             .setString(punishment.reason())
+                            .setBoolean(punishment.active())
                             .setUuidAsString(punishment.playerUniqueId())
                             .setUuidAsString(punishment.punisherUniqueId())
                             .setEnum(punishment.punishmentType())
@@ -215,7 +198,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                 "punishment_type, " +
                                 "punishment_infinite, " +
                                 "punishment_date, " +
-                                "punishment_end_date," +
+                                "punishment_duration," +
                                 "punishment_reason" +
                                 ") VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 .parameter(stmt -> {
@@ -224,9 +207,9 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                             .setUuidAsString(punishment.punisherUniqueId())
                             .setString(punishment.punisherLastName())
                             .setEnum(punishment.punishmentType())
-                            .setBoolean(punishment instanceof InfinitePunishment)
+                            .setBoolean(punishment instanceof PersistentPunishment persistentPunishment && persistentPunishment.durationInSeconds() == -1)
                             .setLocalDateTime(punishment.punishmentDateTime())
-                            .setLocalDateTime(punishment instanceof TimedPunishment persistentPunishment ? persistentPunishment.punishmentEndDateTime() : LocalDateTime.now())
+                            .setInt(punishment instanceof PersistentPunishment persistentPunishment ? persistentPunishment.durationInSeconds() : 0)
                             .setString(punishment.reason());
                 })
                 .insert()

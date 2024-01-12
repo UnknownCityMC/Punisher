@@ -8,3 +8,89 @@ database:
   hikari:
     max-pool-size: 3
     min-idle-connections: 1
+
+templates:
+  '1':
+    reason: Unerlaubte Clientmodifikation/Hacking
+    levels:
+      '1':
+        type: BAN
+        duration: 2592000
+      '2':
+        type: BAN
+        duration: -1
+  '2':
+    reason: Unerlaubte Clientmodifikation/Hacking
+    levels:
+      '1':
+        type: BAN
+        duration: 86400
+      '2':
+        type: BAN
+        duration: 172800
+      '3':
+        type: BAN
+        duration: 345600
+  '3':
+    reason: Unangebrachter Skin/Name
+    levels:
+      '1':
+        type: BAN
+        duration: 864000
+  '4':
+    reason: Mehrfaches Trolling
+    levels:
+      '1':
+        type: BAN
+        duration: 86400
+      '2':
+        type: BAN
+        duration: 172800
+      '3':
+        type: BAN
+        duration: 345600
+      '4':
+        type: BAN
+        duration: -1
+  '5':
+    reason: Bugusing
+    levels:
+      '1':
+        type: BAN
+        duration: 86400
+      '2':
+        type: BAN
+        duration: 172800
+      '3':
+        type: BAN
+        duration: 345600
+      '4':
+        type: BAN
+        duration: -1
+  '6':
+    reason: Chat Verhalten
+    levels:
+      '1':
+        type: MUTE
+        duration: 86400
+      '2':
+        type: BAN
+        duration: 86400
+  '9':
+    reason: Bannumgehung
+    levels:
+      '1':
+        type: BAN
+        duration: -1
+  '99':
+    reason: Extremes Verhalten
+    levels:
+      '1':
+        type: BAN
+        duration: -1
+  '101':
+    reason: Sicherheitsbann
+    levels:
+      '1':
+        type: BAN
+        duration: -1

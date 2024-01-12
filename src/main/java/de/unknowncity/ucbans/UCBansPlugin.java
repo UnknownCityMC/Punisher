@@ -23,14 +23,18 @@ import de.unknowncity.ucbans.command.*;
 import de.unknowncity.ucbans.configuration.Configuration;
 import de.unknowncity.ucbans.configuration.ConfigurationLoader;
 import de.unknowncity.ucbans.configuration.settings.DataBaseSettings;
+import de.unknowncity.ucbans.configuration.settings.TemplateSettings;
 import de.unknowncity.ucbans.configuration.typeserializer.ConfigurationTypeSerializer;
 import de.unknowncity.ucbans.configuration.typeserializer.DatabaseSettingsTypeSerializer;
+import de.unknowncity.ucbans.configuration.typeserializer.TemplateSettingsTypeSerializer;
+import de.unknowncity.ucbans.configuration.typeserializer.TemplateTypeSerializer;
 import de.unknowncity.ucbans.data.database.DataBaseProvider;
 import de.unknowncity.ucbans.data.database.DataBaseUpdater;
 import de.unknowncity.ucbans.data.database.dao.MariaDBPunishmentDao;
 import de.unknowncity.ucbans.data.service.PunishmentService;
 import de.unknowncity.ucbans.listener.LoginListener;
 import de.unknowncity.ucbans.message.Messenger;
+import de.unknowncity.ucbans.punishment.PunishmentTemplate;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.ConfigurateException;
@@ -119,6 +123,8 @@ public class UCBansPlugin {
         var mainConfigurationLoader = YamlConfigurationLoader.builder()
                 .path(dataDirectory.resolve(configPath))
                 .defaultOptions(opts -> opts.serializers(build -> build.register(Configuration.class, new ConfigurationTypeSerializer())))
+                .defaultOptions(opts -> opts.serializers(build -> build.register(PunishmentTemplate.class, new TemplateTypeSerializer())))
+                .defaultOptions(opts -> opts.serializers(build -> build.register(TemplateSettings.class, new TemplateSettingsTypeSerializer())))
                 .defaultOptions(opts -> opts.serializers(build -> build.register(DataBaseSettings.class, new DatabaseSettingsTypeSerializer())))
                 .build();
 
@@ -140,6 +146,7 @@ public class UCBansPlugin {
         new BanCommand(this).register(commandManager);
         new MuteCommand(this).register(commandManager);
         new KickCommand(this).register(commandManager);
+        new UnbanCommand(this).register(commandManager);
 
         new HistoryCommand(this).register(commandManager);
         new ClearHistoryCommand(this).register(commandManager);
