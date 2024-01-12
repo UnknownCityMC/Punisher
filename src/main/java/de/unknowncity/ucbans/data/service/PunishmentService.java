@@ -11,7 +11,6 @@ import de.unknowncity.ucbans.punishment.PunishmentLevel;
 import de.unknowncity.ucbans.punishment.PunishmentTemplate;
 import de.unknowncity.ucbans.punishment.PunishmentType;
 import de.unknowncity.ucbans.punishment.types.*;
-import de.unknowncity.ucbans.util.UUIDFetcher;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -108,25 +107,20 @@ public class PunishmentService {
                 .count();
     }
 
-    /*
-    public void mutePlayer(UUID targetUUID, String reason, CommandSource punisher, LocalDateTime muteEnd) {
-        UUIDFetcher.fetchName(targetUUID).thenAcceptAsync(playerName -> {
-            var mutePunishment = new MutePunishment(
-                    targetUUID,
-                    punisher instanceof Player punisherPlayer ? punisherPlayer.getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000"),
-                    playerName,
-                    punisher instanceof Player punisherPlayer ? punisherPlayer.getUsername() : "CONSOLE",
-                    reason,
-                    true,
-                    LocalDateTime.now(),
-                    muteEnd
-            );
+    public void mutePlayer(UUID targetUUID, String targetName, String reason, CommandSource punisher, int duration) {
+        var mutePunishment = new MutePunishment(
+                targetUUID,
+                punisher instanceof Player punisherPlayer ? punisherPlayer.getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                targetName,
+                punisher instanceof Player punisherPlayer ? punisherPlayer.getUsername() : "CONSOLE",
+                reason,
+                true,
+                LocalDateTime.now(),
+                duration
+        );
 
-            applyPunishment(mutePunishment);
-        });
+        applyPunishment(mutePunishment);
     }
-
-     */
 
     public boolean isMuted(UUID uuid) {
         return isPunished(uuid, PunishmentType.MUTE);

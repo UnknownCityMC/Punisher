@@ -41,7 +41,6 @@ import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;

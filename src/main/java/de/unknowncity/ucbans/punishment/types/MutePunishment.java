@@ -4,7 +4,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.PunishmentType;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

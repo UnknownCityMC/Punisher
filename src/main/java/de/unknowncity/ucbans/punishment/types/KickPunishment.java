@@ -5,8 +5,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.Punishment;
 import de.unknowncity.ucbans.punishment.PunishmentType;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.NodePath;

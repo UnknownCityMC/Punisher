@@ -2,7 +2,6 @@ package de.unknowncity.ucbans.punishment.types;
 
 import de.unknowncity.ucbans.punishment.Punishment;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
