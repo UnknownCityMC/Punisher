@@ -15,8 +15,30 @@ import java.util.UUID;
 
 public class KickPunishment extends Punishment {
 
-    public KickPunishment(UUID playerUniqueId, UUID punisherUniqueId, String playerLastName, String punisherLastName, String reason, boolean active, LocalDateTime punishmentDateTime) {
-        super(playerUniqueId, punisherUniqueId, playerLastName, punisherLastName, reason, active, punishmentDateTime);
+    public KickPunishment(
+            UUID playerUniqueId,
+            UUID punisherUniqueId,
+            String playerLastName,
+            String punisherLastName,
+            String reason,
+            boolean active,
+            LocalDateTime punishmentDateTime
+    ) {
+        super(playerUniqueId, punisherUniqueId, playerLastName, punisherLastName, reason, false, punishmentDateTime);
+        this.punishmentType = PunishmentType.KICK;
+    }
+
+    public KickPunishment(
+            int punishmentId,
+            UUID playerUniqueId,
+            UUID punisherUniqueId,
+            String playerLastName,
+            String punisherLastName,
+            String reason,
+            boolean active,
+            LocalDateTime punishmentDateTime
+    ) {
+        super(punishmentId, playerUniqueId, punisherUniqueId, playerLastName, punisherLastName, reason, false, punishmentDateTime);
         this.punishmentType = PunishmentType.KICK;
     }
 

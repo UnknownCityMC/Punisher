@@ -11,7 +11,7 @@ public interface PunishmentDao {
     CompletableFuture<List<Punishment>> getPunishments(UUID playerUniqueId);
     CompletableFuture<List<Punishment>> getAllPunishments();
     CompletableFuture<Boolean> updatePunishment(Punishment punishment);
-    CompletableFuture<Boolean> deleteAllPunishments(UUID playerUniqueId);
+    CompletableFuture<Boolean> deleteAllInactivePunishments(UUID playerUniqueId);
     CompletableFuture<Boolean> addPunishment(Punishment punishment);
 
 }

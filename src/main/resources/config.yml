@@ -15,15 +15,6 @@ templates:
     levels:
       '1':
         type: BAN
-        duration: 2592000
-      '2':
-        type: BAN
-        duration: -1
-  '2':
-    reason: Unerlaubte Clientmodifikation/Hacking
-    levels:
-      '1':
-        type: BAN
         duration: 86400
       '2':
         type: BAN

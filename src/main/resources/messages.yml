@@ -5,10 +5,12 @@ fetch:
 command:
   mute:
     success: "<prefix> <yellow><player> <green>wurde gemuted!"
+    already-muted: "<prefix> <yellow>player <red>ist bereits gemuted!"
   kick:
     success: "<prefix> <yellow><player> <green>wurde gekickt"
   ban:
     success: "<prefix> <yellow><player> <green>wurde gebannt"
+    already-banned: "<prefix> <yellow>player <red>ist bereits gebannt!"
     overview:
       header: "<white><st>                              <reset><white> [<yellow>Strafe<white>] <st>                              <br>"
       entry: "<yellow><id> <gray>» <red><reason>"
@@ -60,6 +62,8 @@ punishment:
       - "<dark_red>Du wurdest vom Netztwerk gebannt!"
       - ""
       - ""
+      - "<dark_red>PunishmentID: <yellow>#<punishment_id>"
+      - ""
       - "<red>Grund: <yellow><reason>"
       - ""
       - "<red>Teammitglied: <yellow><punisher>"
@@ -100,6 +104,8 @@ punishment:
       - "<dark_red>Du wurdest vom Netztwerk gebannt!"
       - ""
       - ""
+      - "<dark_red>PunishmentID: <yellow>#<punishment_id>"
+      - ""
       - "<red>Grund: <yellow><reason>"
       - ""
       - "<red>Teammitglied: <yellow><punisher>"
@@ -113,12 +119,10 @@ punishment:
       - ""
       - ""
       - "<st><gray>                                                                     "
-  mute:
-    chat-attempt: "<prefix> Du bist bis noch <yellow><remaining> <red>gemuted!"
   history:
     empty: "<red>Keine Bestrafungen gefunden"
     header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
-    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till>'><gray>» <red><type> <gray>Aktiv: <yellow><active> <gray>von <yellow><by> <grey>für <yellow><reason></hover>"
+    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <red><type> <gray>active <yellow><active> <gray>von <yellow><by> <grey></hover>"
     footer: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
 exception:
   invalid-syntax: " <red>Bitte benutze <yellow><valid-syntax>"

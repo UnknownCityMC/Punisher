@@ -1,7 +1,6 @@
 package de.unknowncity.ucbans.command;
 
 import cloud.commandframework.CommandManager;
-import cloud.commandframework.arguments.standard.DurationArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import com.velocitypowered.api.command.CommandSource;
@@ -13,20 +12,16 @@ import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.NodePath;
 
-import java.time.Duration;
-
-public class MuteCommand extends BaseCommand {
-    public MuteCommand(UCBansPlugin plugin) {
+public class UnmuteCommand extends BaseCommand {
+    public UnmuteCommand(UCBansPlugin plugin) {
         super(plugin);
     }
 
     @Override
     public void register(CommandManager<CommandSource> commandManager) {
-        commandManager.command(commandManager.commandBuilder("mute")
-                .permission("ucbans.command.mute")
+        commandManager.command(commandManager.commandBuilder("unmute")
+                .permission("ucbans.command.unmute")
                 .argument(StringArgument.single("player"))
-                .argument(DurationArgument.of("duration"))
-                .argument(StringArgument.greedy("reason"))
                 .handler(this::handle)
         );
     }
@@ -34,9 +29,6 @@ public class MuteCommand extends BaseCommand {
     private void handle(CommandContext<CommandSource> commandSourceCommandContext) {
         var sender = commandSourceCommandContext.getSender();
         var playerName = (String) commandSourceCommandContext.get("player");
-
-        var reason = (String) commandSourceCommandContext.get("reason");
-        var duration = (Duration) commandSourceCommandContext.get("duration");
 
         BukkitFutureResult.of(UUIDFetcher.fetchUUID(playerName)).whenComplete(plugin, uuid -> {
             if (uuid.isEmpty()) {
@@ -48,19 +40,15 @@ public class MuteCommand extends BaseCommand {
                 return;
             }
             if (plugin.punishmentService().isMuted(uuid.get())) {
+                plugin.punishmentService().unmute(uuid.get());
                 plugin.messenger().sendMessage(
                         sender,
-                        NodePath.path("command", "mute", "already-muted"),
+                        NodePath.path("command", "unmute", "success"),
                         TagResolver.resolver("player", Tag.preProcessParsed(playerName))
                 );
                 return;
             }
-            plugin.punishmentService().mutePlayer(uuid.get(), playerName, reason, sender, Integer.parseInt(String.valueOf(duration.toSeconds())));
-            plugin.messenger().sendMessage(
-                    sender,
-                    NodePath.path("command", "mute", "success"),
-                    TagResolver.resolver("player", Tag.preProcessParsed(playerName))
-            );
+            plugin.messenger().sendMessage(sender, NodePath.path("command", "unmute", "not-muted"));
         });
     }
 }

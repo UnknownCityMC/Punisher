@@ -22,6 +22,21 @@ public abstract class PersistentPunishment extends Punishment {
         this.duration = duration;
     }
 
+    public PersistentPunishment(
+            int punishmentId,
+            UUID playerUniqueId,
+            UUID punisherUniqueId,
+            String playerLastName,
+            String punisherLastName,
+            String reason,
+            boolean active,
+            LocalDateTime punishmentDateTime,
+            int duration
+    ) {
+        super(punishmentId, playerUniqueId, punisherUniqueId, playerLastName, punisherLastName, reason, active, punishmentDateTime);
+        this.duration = duration;
+    }
+
     public int durationInSeconds() {
         return duration;
     }

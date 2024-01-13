@@ -1,7 +1,9 @@
 package de.unknowncity.ucbans.util;
 
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,10 +25,16 @@ public class UUIDFetcher {
                 .build();
         var response = HttpClient.newHttpClient().sendAsync(request, HttpResponse.BodyHandlers.ofString());
         return response.thenApply(stringHttpResponse -> {
-            var json = JsonParser.parseString(stringHttpResponse.body()).getAsJsonObject().get("id");
-            return json == null ? Optional.empty() : Optional.of(
-                    UUID.fromString(json.getAsString().replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"))
-            );
+            try (var jsonReader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(stringHttpResponse.body().getBytes())))) {
+                jsonReader.setLenient(true);
+                var json = JsonParser.parseReader(jsonReader).getAsJsonObject().get("id");
+                return json == null ? Optional.empty() : Optional.of(
+                        UUID.fromString(json.getAsString().replaceFirst("(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)", "$1-$2-$3-$4-$5"))
+                );
+            } catch (IOException e) {
+                return Optional.empty();
+            }
+
         });
     }
 
@@ -36,10 +44,16 @@ public class UUIDFetcher {
                 .GET()
                 .timeout(Duration.of(10, SECONDS))
                 .build();
+
         var response = HttpClient.newHttpClient().sendAsync(request, HttpResponse.BodyHandlers.ofString());
         return response.thenApply(stringHttpResponse -> {
-            var json = JsonParser.parseString(stringHttpResponse.body()).getAsJsonObject().get("name");
-            return json == null ? Optional.empty() : Optional.of(json.getAsString());
+            try (var jsonReader = new JsonReader(new InputStreamReader(new ByteArrayInputStream(stringHttpResponse.body().getBytes())))) {
+                jsonReader.setLenient(true);
+                var json = JsonParser.parseReader(jsonReader).getAsJsonObject().get("name");
+                return json == null ? Optional.empty() : Optional.of(json.getAsString());
+            } catch (IOException e) {
+                return Optional.empty();
+            }
         });
     }
 }

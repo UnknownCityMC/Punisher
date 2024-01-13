@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class Punishment {
+    private int punishmentId;
     private UUID playerUniqueId;
     private UUID punisherUniqueId;
     private String playerLastName;
@@ -32,6 +33,35 @@ public abstract class Punishment {
         this.reason = reason;
         this.active = active;
         this.punishmentDateTime = punishmentDateTime;
+    }
+
+    public Punishment(
+            int punishmentId,
+            UUID playerUniqueId,
+            UUID punisherUniqueId,
+            String playerLastName,
+            String punisherLastName,
+            String reason,
+            boolean active,
+            LocalDateTime punishmentDateTime
+    ) {
+        this.punishmentId = punishmentId;
+        this.playerUniqueId = playerUniqueId;
+        this.punisherUniqueId = punisherUniqueId;
+        this.playerLastName = playerLastName;
+        this.punisherLastName = punisherLastName;
+        this.reason = reason;
+        this.active = active;
+        this.punishmentDateTime = punishmentDateTime;
+    }
+
+    public int punishmentId() {
+        return punishmentId;
+    }
+
+    public Punishment punishmentId(int punishmentId) {
+        this.punishmentId = punishmentId;
+        return this;
     }
 
     public abstract void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger);

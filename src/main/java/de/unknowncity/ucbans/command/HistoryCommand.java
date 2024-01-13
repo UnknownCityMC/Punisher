@@ -67,7 +67,7 @@ public class HistoryCommand extends BaseCommand {
                                                     .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) :
                                             punishment.punishmentDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                             )),
-
+                            TagResolver.resolver("punishment_id", Tag.preProcessParsed(String.valueOf(punishment.punishmentId()))),
                             TagResolver.resolver("by", Tag.preProcessParsed(String.valueOf(punishment.punisherLastName()))),
                             TagResolver.resolver("reason", Tag.preProcessParsed(String.valueOf(punishment.reason())))
                     );

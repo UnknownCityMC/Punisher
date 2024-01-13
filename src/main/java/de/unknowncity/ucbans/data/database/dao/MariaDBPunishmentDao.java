@@ -22,6 +22,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
         return builder(Punishment.class)
                 .query(
                         "SELECT " +
+                        "punishment_id, " +
                         "player_uuid, " +
                         "player_last_name, " +
                         "active, " +
@@ -39,6 +40,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                 .readRow(rs ->
                         switch (rs.getEnum("punishment_type", PunishmentType.class)) {
                             case BAN -> new BanPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
@@ -49,6 +51,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getInt("punishment_duration")
                             );
                             case KICK -> new KickPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
@@ -57,23 +60,27 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getBoolean("active"),
                                     rs.getLocalDateTime("punishment_date")
                             );
-                            case MUTE -> new KickPunishment(
+                            case MUTE -> new MutePunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
+                                    rs.getLocalDateTime("punishment_date"),
+                                    rs.getInt("punishment_duration")
                             );
-                            case WARN -> new KickPunishment(
+                            case WARN -> new WarnPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
+                                    rs.getLocalDateTime("punishment_date"),
+                                    rs.getInt("punishment_duration")
                             );
                         }
                 )
@@ -85,6 +92,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
         return builder(Punishment.class)
                 .query(
                         "SELECT " +
+                                "punishment_id, " +
                                 "player_uuid, " +
                                 "player_last_name, " +
                                 "active, " +
@@ -101,6 +109,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                 .readRow(rs ->
                         switch (rs.getEnum("punishment_type", PunishmentType.class)) {
                             case BAN -> new BanPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
@@ -111,6 +120,7 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getInt("punishment_duration")
                             );
                             case KICK -> new KickPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
@@ -119,23 +129,27 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
                                     rs.getBoolean("active"),
                                     rs.getLocalDateTime("punishment_date")
                             );
-                            case MUTE -> new KickPunishment(
+                            case MUTE -> new MutePunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
+                                    rs.getLocalDateTime("punishment_date"),
+                                    rs.getInt("punishment_duration")
                             );
-                            case WARN -> new KickPunishment(
+                            case WARN -> new WarnPunishment(
+                                    rs.getInt("punishment_id"),
                                     rs.getUuidFromString("player_uuid"),
                                     rs.getUuidFromString("punisher_uuid"),
                                     rs.getString("player_last_name"),
                                     rs.getString("punisher_last_name"),
                                     rs.getString("punishment_reason"),
                                     rs.getBoolean("active"),
-                                    rs.getLocalDateTime("punishment_date")
+                                    rs.getLocalDateTime("punishment_date"),
+                                    rs.getInt("punishment_duration")
                             );
                         }
                 )
@@ -176,9 +190,9 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
     }
 
     @Override
-    public CompletableFuture<Boolean> deleteAllPunishments(UUID playerUniqueId) {
+    public CompletableFuture<Boolean> deleteAllInactivePunishments(UUID playerUniqueId) {
         return builder()
-                .query("DELETE FROM punishment WHERE player_uuid = ?")
+                .query("DELETE FROM punishment WHERE player_uuid = ? AND active = 0")
                 .parameter(stmt -> stmt.setUuidAsString(playerUniqueId))
                 .delete()
                 .send()

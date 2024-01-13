@@ -28,6 +28,20 @@ public class BanPunishment extends PersistentPunishment {
         this.punishmentType = PunishmentType.BAN;
     }
 
+    public BanPunishment(
+            int punishmentId,
+            UUID playerUniqueId,
+            UUID punisherUniqueId,
+            String playerLastName,
+            String punisherLastName,
+            String reason,
+            boolean active,
+            LocalDateTime punishmentDateTime,
+            int duration) {
+        super(punishmentId, playerUniqueId, punisherUniqueId, playerLastName, punisherLastName, reason, active, punishmentDateTime, duration);
+        this.punishmentType = PunishmentType.BAN;
+    }
+
     @Override
     public void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger) {
         Optional<Player> playerOpt = proxyServer.getPlayer(playerUniqueId());

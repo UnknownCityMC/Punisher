@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS punishment
 (
+    punishment_id INTEGER PRIMARY KEY AUTO_INCREMENT,
     player_uuid VARCHAR(36) DEFAULT (UUID()),
     player_last_name VARCHAR(16) NOT NULL,
     punisher_uuid VARCHAR(36) DEFAULT (UUID()),

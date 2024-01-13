@@ -19,16 +19,6 @@ public class BanCommand extends BaseCommand {
 
     @Override
     public void register(CommandManager<CommandSource> commandManager) {
-        /*
-        commandManager.command(commandManager.commandBuilder("ban")
-                .permission("ucbans.command.ban.admin")
-                .argument(StringArgument.single("player"))
-                .argument(DurationArgument.of("duration"))
-                .argument(StringArgument.greedy("reason"))
-                .handler(this::handle)
-        );
-         */
-
         commandManager.command(commandManager.commandBuilder("ban")
                 .permission("ucbans.command.ban")
                 .argument(StringArgument.single("player"))
@@ -82,6 +72,14 @@ public class BanCommand extends BaseCommand {
                 plugin.messenger().sendMessage(
                         sender,
                         NodePath.path("fetch", "uuid", "not-exists"),
+                        TagResolver.resolver("player", Tag.preProcessParsed(playerName))
+                );
+                return;
+            }
+            if (plugin.punishmentService().isBanned(uuid.get())) {
+                plugin.messenger().sendMessage(
+                        sender,
+                        NodePath.path("command", "ban", "already-banned"),
                         TagResolver.resolver("player", Tag.preProcessParsed(playerName))
                 );
                 return;
