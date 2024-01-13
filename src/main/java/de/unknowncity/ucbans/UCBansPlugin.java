@@ -35,6 +35,7 @@ import de.unknowncity.ucbans.data.service.PunishmentService;
 import de.unknowncity.ucbans.listener.LoginListener;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.PunishmentTemplate;
+import de.unknowncity.ucbans.util.UUIDFetcher;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.ConfigurateException;
@@ -139,13 +140,22 @@ public class UCBansPlugin {
         } catch (ConfigurateException e) {
             logger.log(Level.SEVERE, "Failed to load configuration", e);
         }
+
+        UUIDFetcher.clearCache();
     }
 
     public void registerCommands() {
         new BanCommand(this).register(commandManager);
         new MuteCommand(this).register(commandManager);
         new KickCommand(this).register(commandManager);
+
         new UnbanCommand(this).register(commandManager);
+        new UnmuteCommand(this).register(commandManager);
+        new UnkickCommand(this).register(commandManager);
+
+        new WarnCommand(this).register(commandManager);
+        new RemoveWarnCommand(this).register(commandManager);
+        new WarnsCommand(this).register(commandManager);
 
         new HistoryCommand(this).register(commandManager);
         new ClearHistoryCommand(this).register(commandManager);
