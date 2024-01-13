@@ -159,6 +159,7 @@ public class UCBansPlugin {
 
         new HistoryCommand(this).register(commandManager);
         new ClearHistoryCommand(this).register(commandManager);
+        new DeleteHistoryEntryCommand(this).register(commandManager);
     }
 
     public void registerListeners() {
