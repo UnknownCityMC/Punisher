@@ -149,8 +149,17 @@ public class PunishmentService {
         unPunish(uuid, PunishmentType.MUTE);
     }
 
-    public void removeWarn(int Id) {
+    public void removeWarn(int id) {
+        var warnPunishment = cachedPunishments().stream()
+                .filter(punishment -> punishment.punishmentType() == PunishmentType.WARN)
+                .filter(punishment -> punishment.punishmentId() == id)
+                .findFirst();
 
+        if (warnPunishment.isPresent()) {
+            punishmentDao.deletePunishment(id).thenAcceptAsync(result -> {
+                cachePunishments();
+            });
+        }
     }
 
     public void unPunish(UUID uuid, PunishmentType punishmentType) {

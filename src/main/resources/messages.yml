@@ -8,6 +8,8 @@ command:
     already-muted: "<prefix> <yellow>player <red>ist bereits gemuted!"
   kick:
     success: "<prefix> <yellow><player> <green>wurde gekickt"
+  unkick:
+    success: "<prefix> <yellow><player> <green>wurde entkickt!"
   ban:
     success: "<prefix> <yellow><player> <green>wurde gebannt"
     already-banned: "<prefix> <yellow>player <red>ist bereits gebannt!"
@@ -18,6 +20,9 @@ command:
   unban:
     success: "<prefix> <yellow><player> <green>wurde entbannt"
     not-banned: "<prefix> <yellow><player> <red>ist nicht gebannt"
+  unmute:
+    success: "<prefix> <yellow><player> <green>wurde entmuted!"
+    not-muted: "<prefix> <yellow>player <red>ist nicht gemuted!"
   clearhistory:
     success: "<prefix> <green>Punishment History von <yellow><player> <green> gelöscht!"
 punishment:
@@ -124,6 +129,11 @@ punishment:
     header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
     entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <red><type> <gray>active <yellow><active> <gray>von <yellow><by> <grey></hover>"
     footer: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
+  warns:
+    empty: "<red>Keine Warns gefunden"
+    header: "<white><st>          <reset><white>[<yellow><player>'s Warns<white>]<st>          "
+    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <gray>von <yellow><by> <grey></hover>"
+    footer: "<white><st>          <reset><white>[<yellow><player>'s Warns<white>]<st>          "
 exception:
   invalid-syntax: " <red>Bitte benutze <yellow><valid-syntax>"
   invalid-sender: " <red>Dieser Command darf nur von <yellow><valid-sender> <red>ausgeführt werden"

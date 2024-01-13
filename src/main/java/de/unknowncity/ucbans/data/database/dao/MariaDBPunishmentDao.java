@@ -190,6 +190,16 @@ public class MariaDBPunishmentDao extends QueryFactory implements PunishmentDao 
     }
 
     @Override
+    public CompletableFuture<Boolean> deletePunishment(int id) {
+        return builder()
+                .query("DELETE FROM punishment WHERE punishment_id = ?")
+                .parameter(stmt -> stmt.setInt(id))
+                .delete()
+                .send()
+                .thenApply(UpdateResult::changed);
+    }
+
+    @Override
     public CompletableFuture<Boolean> deleteAllInactivePunishments(UUID playerUniqueId) {
         return builder()
                 .query("DELETE FROM punishment WHERE player_uuid = ? AND active = 0")
