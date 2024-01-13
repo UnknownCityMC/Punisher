@@ -1,6 +1,7 @@
 package de.unknowncity.ucbans.punishment;
 
 import com.velocitypowered.api.proxy.ProxyServer;
+import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.message.Messenger;
 
 import java.time.LocalDateTime;
@@ -64,7 +65,7 @@ public abstract class Punishment {
         return this;
     }
 
-    public abstract void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger);
+    public abstract void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger, UCBansPlugin plugin);
 
     public UUID playerUniqueId() {
         return playerUniqueId;

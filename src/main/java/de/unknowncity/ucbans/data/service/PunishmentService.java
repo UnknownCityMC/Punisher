@@ -48,11 +48,16 @@ public class PunishmentService {
 
     public void clearPunishmentHistory(UUID playerUniqueId) {
         punishmentDao.deleteAllInactivePunishments(playerUniqueId);
-        cachedPunishments.removeIf(punishment -> punishment.playerUniqueId().equals(playerUniqueId));
+        cachedPunishments.removeIf(punishment -> punishment.playerUniqueId().equals(playerUniqueId) && !punishment.active());
+    }
+
+    public void deletePunishmentHistoryEntry(int punishmentId) {
+        punishmentDao.deletePunishment(punishmentId);
+        cachedPunishments.removeIf(punishment -> punishment.punishmentId() == punishmentId);
     }
 
     private void applyPunishment(Punishment punishment) {
-        punishment.executeInitialPunishmentAction(proxyServer, messenger);
+        punishment.executeInitialPunishmentAction(proxyServer, messenger, plugin);
         punishmentDao.addPunishment(punishment).thenAcceptAsync(result -> cachePunishments());
 
     }

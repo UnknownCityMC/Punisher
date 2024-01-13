@@ -3,6 +3,12 @@ fetch:
   uuid:
     not-exists: "<prefix> <red>Ein Spieler namens <yellow><player> <red>existiert nicht!"
 command:
+  deletehistoryentry:
+    success: "<prefix> <green>Der Eintrag mit der ID <yellow><id> <green>wurde gelöscht!"
+  warn:
+    success: "<prefix> <yellow><player> <green>wurde gewarnt!"
+  removewarn:
+    success: "<prefix> <green>Der Warn mit der ID <yellow><id> <green>wurde gelöscht!"
   mute:
     success: "<prefix> <yellow><player> <green>wurde gemuted!"
     already-muted: "<prefix> <yellow>player <red>ist bereits gemuted!"
@@ -27,6 +33,13 @@ command:
     success: "<prefix> <green>Punishment History von <yellow><player> <green> gelöscht!"
 punishment:
   kick:
+    notify:
+      - "<st><gray>                                                            "
+      - ""
+      - "<yellow><player> <gray>wurde von <yellow><punisher> <gray>gekickt"
+      - "<grey>Grund: <reason>"
+      - ""
+      - "<st><gray>                                                            "
     disconnect:
       - "<st><gray>                              <reset> <prefix> <st><gray>                              "
       - ""
@@ -41,6 +54,14 @@ punishment:
       - ""
       - "<st><gray>                                                                     "
   ban:
+    notify:
+      - "<st><gray>                                                            "
+      - ""
+      - "<yellow><player> <gray>wurde von <yellow><punisher> <gray>gebannt"
+      - "<gray>Grund: <reason>"
+      - "<gray>Verbleibende Zeit: <dark_red>PERMANENT"
+      - ""
+      - "<st><gray>                                                            "
     disconnect:
       - "<st><gray>                              <reset> <prefix> <st><gray>                              "
       - ""
@@ -82,6 +103,14 @@ punishment:
       - ""
       - "<st><gray>                                                                     "
   tempban:
+    notify:
+      - "<st><gray>                                                            "
+      - ""
+      - "<yellow><player> <gray>wurde von <yellow><punisher> <gray>gebannt"
+      - "<gray>Grund: <reason>"
+      - "<gray>Verbleibende Zeit: <dark_red><remaining>"
+      - ""
+      - "<st><gray>                                                            "
     disconnect:
       - "<st><gray>                              <reset> <prefix> <st><gray>                              "
       - ""
@@ -124,15 +153,23 @@ punishment:
       - ""
       - ""
       - "<st><gray>                                                                     "
+  warn:
+    notify:
+      - "<st><gray>                                                            "
+      - ""
+      - "<yellow><player> <gray>wurde von <yellow><punisher> <gray>gewarnt"
+      - "<gray>Grund: <reason>"
+      - ""
+      - "<st><gray>                                                            "
   history:
     empty: "<red>Keine Bestrafungen gefunden"
     header: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
-    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <red><type> <gray>active <yellow><active> <gray>von <yellow><by> <grey></hover>"
+    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <red><type> <gray>active <yellow><active> <gray>von <yellow><by> <grey></hover><hover:show_text:'<red>Eintrag löschen'><click:run_command:'/deletehistoryentry <punishment_id>'><gray>[<red>X<gray>]</click></hover>"
     footer: "<white><st>          <reset><white>[<yellow><player>'s Bestrafungen<white>]<st>          "
   warns:
     empty: "<red>Keine Warns gefunden"
     header: "<white><st>          <reset><white>[<yellow><player>'s Warns<white>]<st>          "
-    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <gray>von <yellow><by> <grey></hover>"
+    entry: "<hover:show_text:'<gray>Am <yellow><on> <gray>bis <yellow><till> <br><gray>Grund <yellow><reason>'><gray>» <dark_red>#<punishment_id> <gray>von <yellow><by> <grey></hover> <hover:show_text:'<red>Eintrag löschen'><click:run_command:'/removewarn <punishment_id>'><gray>[<red>X<gray>]</click></hover>"
     footer: "<white><st>          <reset><white>[<yellow><player>'s Warns<white>]<st>          "
 exception:
   invalid-syntax: " <red>Bitte benutze <yellow><valid-syntax>"

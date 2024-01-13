@@ -34,7 +34,8 @@ public class RemoveWarnCommand extends BaseCommand {
         plugin.punishmentService().removeWarn(warnId);
         plugin.messenger().sendMessage(
                 sender,
-                NodePath.path("command", "unmute", "success")
+                NodePath.path("command", "removewarn", "success"),
+                TagResolver.resolver("id", Tag.preProcessParsed(String.valueOf(warnId)))
         );
     }
 }

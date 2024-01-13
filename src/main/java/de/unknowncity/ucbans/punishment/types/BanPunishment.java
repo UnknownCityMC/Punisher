@@ -2,6 +2,7 @@ package de.unknowncity.ucbans.punishment.types;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.PunishmentType;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -43,7 +44,7 @@ public class BanPunishment extends PersistentPunishment {
     }
 
     @Override
-    public void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger) {
+    public void executeInitialPunishmentAction(ProxyServer proxyServer, Messenger messenger, UCBansPlugin plugin) {
         Optional<Player> playerOpt = proxyServer.getPlayer(playerUniqueId());
         if (playerOpt.isEmpty()) {
             return;
@@ -53,6 +54,23 @@ public class BanPunishment extends PersistentPunishment {
 
         var endDate = punishmentDateTime().plus(Duration.ofSeconds(durationInSeconds()));
         var duration = Duration.between(LocalDateTime.now(), endDate);
+
+        var notifyMessage = messenger.componentFromList(NodePath.path("punishment", durationInSeconds() == -1 ? "ban" : "tempban", "notify"),
+                TagResolver.resolver("reason", Tag.preProcessParsed(reason())),
+                TagResolver.resolver("player", Tag.preProcessParsed(playerLastName())),
+                TagResolver.resolver("punisher", Tag.preProcessParsed(punisherLastName())),
+                TagResolver.resolver("end_date", Tag.preProcessParsed(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))),
+                TagResolver.resolver("remaining", Tag.preProcessParsed(
+                        String.format(
+                                messenger.getString(NodePath.path("format", "time")),
+                                duration.toDaysPart(), duration.toHoursPart(), duration.toMinutesPart(), duration.toSecondsPart()
+                        )
+                ))
+        );
+
+        proxyServer.getAllPlayers().forEach(
+                audience -> audience.sendMessage(notifyMessage)
+        );
 
         var kickMessage = messenger.componentFromList(NodePath.path("punishment", durationInSeconds() == -1 ? "ban" : "tempban", "disconnect"),
                 TagResolver.resolver("reason", Tag.preProcessParsed(reason())),
