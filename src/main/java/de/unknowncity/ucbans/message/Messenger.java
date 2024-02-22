@@ -47,7 +47,6 @@ public class Messenger {
         }
 
         var component = Component.text();
-        plugin.logger().info(messageStringList.toString());
 
         messageStringList.forEach(messageString -> {
             component.appendNewline();

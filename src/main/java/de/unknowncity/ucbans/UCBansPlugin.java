@@ -23,11 +23,9 @@ import de.unknowncity.ucbans.command.*;
 import de.unknowncity.ucbans.configuration.Configuration;
 import de.unknowncity.ucbans.configuration.ConfigurationLoader;
 import de.unknowncity.ucbans.configuration.settings.DataBaseSettings;
+import de.unknowncity.ucbans.configuration.settings.RedisSettings;
 import de.unknowncity.ucbans.configuration.settings.TemplateSettings;
-import de.unknowncity.ucbans.configuration.typeserializer.ConfigurationTypeSerializer;
-import de.unknowncity.ucbans.configuration.typeserializer.DatabaseSettingsTypeSerializer;
-import de.unknowncity.ucbans.configuration.typeserializer.TemplateSettingsTypeSerializer;
-import de.unknowncity.ucbans.configuration.typeserializer.TemplateTypeSerializer;
+import de.unknowncity.ucbans.configuration.typeserializer.*;
 import de.unknowncity.ucbans.data.database.DataBaseProvider;
 import de.unknowncity.ucbans.data.database.DataBaseUpdater;
 import de.unknowncity.ucbans.data.database.dao.MariaDBPunishmentDao;
@@ -35,6 +33,8 @@ import de.unknowncity.ucbans.data.service.PunishmentService;
 import de.unknowncity.ucbans.listener.LoginListener;
 import de.unknowncity.ucbans.message.Messenger;
 import de.unknowncity.ucbans.punishment.PunishmentTemplate;
+import de.unknowncity.ucbans.util.MuteToChat;
+import de.unknowncity.ucbans.util.RedisProvider;
 import de.unknowncity.ucbans.util.UUIDFetcher;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -66,10 +66,14 @@ public class UCBansPlugin {
     private DataBaseProvider dataBaseProvider;
     private DataBaseUpdater dataBaseUpdater;
     private HikariDataSource dataSource;
-
     private Path dataDirectory;
 
-    public static final boolean IS_DEV_BUILD = true;
+    private MuteToChat muteToChat;
+
+    public static final String MUTE_MESSAGE_CHANNEL = "mutebridge:mutes";
+
+    public static final boolean IS_DEV_BUILD = false;
+    private RedisProvider redisProvider;
 
     @Inject
     public UCBansPlugin(ProxyServer proxyServer, Logger logger, @DataDirectory Path dataDirectory) {
@@ -89,6 +93,7 @@ public class UCBansPlugin {
         reloadConfig();
 
         updateAndConnectToDatabase(configuration.dataBaseSettings());
+        redisProvider = new RedisProvider(configuration.redisSettings());
         punishmentService.cachePunishments();
 
         initCommandManager();
@@ -126,6 +131,7 @@ public class UCBansPlugin {
                 .defaultOptions(opts -> opts.serializers(build -> build.register(PunishmentTemplate.class, new TemplateTypeSerializer())))
                 .defaultOptions(opts -> opts.serializers(build -> build.register(TemplateSettings.class, new TemplateSettingsTypeSerializer())))
                 .defaultOptions(opts -> opts.serializers(build -> build.register(DataBaseSettings.class, new DatabaseSettingsTypeSerializer())))
+                .defaultOptions(opts -> opts.serializers(build -> build.register(RedisSettings.class, new RedisSettingsTypeSerializer())))
                 .build();
 
         var messageConfigurationLoader = YamlConfigurationLoader.builder()
@@ -137,6 +143,8 @@ public class UCBansPlugin {
 
             configuration = rooConfigNode.get(Configuration.class);
             messenger = new Messenger(this, messageRootNode);
+
+            muteToChat = new MuteToChat(this);
         } catch (ConfigurateException e) {
             logger.log(Level.SEVERE, "Failed to load configuration", e);
         }
@@ -270,5 +278,13 @@ public class UCBansPlugin {
 
     public Configuration configuration() {
         return configuration;
+    }
+
+    public RedisProvider redisProvider() {
+        return redisProvider;
+    }
+
+    public MuteToChat muteToChat() {
+        return muteToChat;
     }
 }

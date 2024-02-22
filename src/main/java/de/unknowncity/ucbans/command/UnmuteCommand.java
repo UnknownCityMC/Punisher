@@ -46,6 +46,7 @@ public class UnmuteCommand extends BaseCommand {
                         NodePath.path("command", "unmute", "success"),
                         TagResolver.resolver("player", Tag.preProcessParsed(playerName))
                 );
+                plugin.muteToChat().muteToChat(uuid.get());
                 return;
             }
             plugin.messenger().sendMessage(sender, NodePath.path("command", "unmute", "not-muted"));

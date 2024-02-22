@@ -8,8 +8,6 @@ import de.unknowncity.ucbans.UCBansPlugin;
 import de.unknowncity.ucbans.punishment.Punishment;
 import de.unknowncity.ucbans.punishment.PunishmentType;
 import de.unknowncity.ucbans.punishment.types.PersistentPunishment;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.NodePath;
@@ -18,7 +16,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.concurrent.ExecutionException;
 
 public class LoginListener {
     private final UCBansPlugin plugin;
@@ -31,6 +28,11 @@ public class LoginListener {
     public void onLogin(LoginEvent event) {
         var uniqueId = event.getPlayer().getUniqueId();
         var isBanned = plugin.punishmentService().isBanned(uniqueId);
+        var isMuted = plugin.punishmentService().isMuted(uniqueId);
+
+        if (isMuted) {
+            plugin.muteToChat().muteToChat(uniqueId);
+        }
 
         if (!isBanned) {
             return;
