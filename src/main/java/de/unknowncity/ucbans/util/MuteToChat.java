@@ -23,7 +23,6 @@ public class MuteToChat {
 
         if (optionalPunishment.isEmpty()) {
             jedis.publish(UCBansPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(uuid, LocalDateTime.now()));
-            plugin.logger().warning("Mist ey sollte gemutet sein?");
             return;
         }
 
