@@ -22,7 +22,7 @@ public class MuteToChat {
         Optional<Punishment> optionalPunishment = plugin.punishmentService().getCachedActiveMutePlayer(uuid);
 
         if (optionalPunishment.isEmpty()) {
-            jedis.publish(UCBansPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(uuid, LocalDateTime.now()));
+            jedis.publish(PunisherPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(uuid, LocalDateTime.now()));
             return;
         }
 
@@ -30,12 +30,12 @@ public class MuteToChat {
 
         var endDate = mute.punishmentDateTime().plus(Duration.ofSeconds(((PersistentPunishment) mute).durationInSeconds()));
 
-        jedis.publish(UCBansPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(uuid, endDate));
+        jedis.publish(PunisherPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(uuid, endDate));
     }
 
     public void muteToChat(MutePunishment mute) {
         var jedis = plugin.redisProvider().getNewJedisConnection();
         var endDate = mute.punishmentDateTime().plus(Duration.ofSeconds(( mute).durationInSeconds()));
-        jedis.publish(UCBansPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(mute.playerUniqueId(), endDate));
+        jedis.publish(PunisherPlugin.MUTE_MESSAGE_CHANNEL, MuteSerializer.serialize(mute.playerUniqueId(), endDate));
     }
 }
