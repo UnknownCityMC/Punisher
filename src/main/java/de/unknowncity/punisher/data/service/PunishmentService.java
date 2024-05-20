@@ -68,7 +68,7 @@ public class PunishmentService {
     }
 
     public void warnPlayer(UUID targetUUID, String targetName, String reason, CommandSource punisher) {
-        var warnPunishment  = new WarnPunishment(
+        var warnPunishment = new WarnPunishment(
                 targetUUID,
                 punisher instanceof Player punisherPlayer ? punisherPlayer.getUniqueId() : UUID.fromString("00000000-0000-0000-0000-000000000000"),
                 targetName,
@@ -128,8 +128,8 @@ public class PunishmentService {
         );
 
         applyPunishment(mutePunishment);
+        plugin.muteToChat().muteToChat(mutePunishment);
     }
-
 
 
     public boolean isMuted(UUID uuid) {
@@ -183,7 +183,7 @@ public class PunishmentService {
                 .filter(punishment -> punishment instanceof PersistentPunishment)
                 .filter(punishment -> ((PersistentPunishment) punishment).durationInSeconds() != -1)
                 .filter(punishment -> punishment.punishmentDateTime().plus(Duration.ofSeconds(((PersistentPunishment) punishment).durationInSeconds())).isBefore(LocalDateTime.now()))
-                .forEach(persistantPunishment-> {
+                .forEach(persistantPunishment -> {
                     persistantPunishment.active(false);
                     punishmentDao.updatePunishment(persistantPunishment).thenAcceptAsync(result -> {
                         cachePunishments();
@@ -196,7 +196,6 @@ public class PunishmentService {
     }
 
 
-
     public Set<Punishment> cachedPunishments() {
         return cachedPunishments;
     }
@@ -206,6 +205,13 @@ public class PunishmentService {
                 .filter(punishment -> punishment.playerUniqueId().equals(uuid))
                 .sorted(Comparator.comparing(Punishment::punishmentDateTime))
                 .toList();
+    }
+
+    public Optional<Punishment> getCachedActiveMutePlayer(UUID uuid) {
+        return cachedPunishments.stream()
+                .filter(punishment -> punishment.playerUniqueId().equals(uuid))
+                .filter(punishment -> punishment.punishmentType().equals(PunishmentType.MUTE))
+                .filter(Punishment::active).min(Comparator.comparing(Punishment::punishmentDateTime));
     }
 
     public void cachePunishments() {

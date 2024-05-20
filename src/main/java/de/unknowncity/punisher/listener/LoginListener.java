@@ -28,6 +28,11 @@ public class LoginListener {
     public void onLogin(LoginEvent event) {
         var uniqueId = event.getPlayer().getUniqueId();
         var isBanned = plugin.punishmentService().isBanned(uniqueId);
+        var isMuted = plugin.punishmentService().isMuted(uniqueId);
+
+        if (isMuted) {
+            plugin.muteToChat().muteToChat(uniqueId);
+        }
 
         if (!isBanned) {
             return;

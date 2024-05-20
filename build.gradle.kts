@@ -20,9 +20,11 @@ repositories {
 dependencies {
     implementation("cloud.commandframework", "cloud-velocity", "1.8.4")
     implementation("cloud.commandframework", "cloud-minecraft-extras", "1.8.4")
-    implementation("de.chojo.sadu", "sadu", "1.4.0")
+    implementation("de.chojo.sadu", "sadu", "1.4.1")
     implementation("org.spongepowered", "configurate-yaml", "4.1.2")
     implementation("org.spongepowered", "configurate-hocon", "4.1.2")
+
+    implementation("redis.clients", "jedis", "5.1.0")
 
     implementation("org.mariadb.jdbc", "mariadb-java-client", "3.3.2")
 
@@ -52,6 +54,7 @@ tasks{
         relocate("org.spongepowered", shadeBasePath + "configurate")
         relocate("de.chojo.sadu", shadeBasePath + "sadu")
         relocate("cloud.commandframework", shadeBasePath + "cloud")
+        relocate("redis.clients", shadeBasePath + "redis")
     }
 
     compileJava {

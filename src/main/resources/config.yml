@@ -9,6 +9,11 @@ database:
     max-pool-size: 3
     min-idle-connections: 1
 
+redis:
+  host: localhost
+  port: 6379
+  password: testpassword
+
 templates:
   '1':
     reason: Unerlaubte Clientmodifikation/Hacking
