@@ -1,2 +1,2 @@
-rootProject.name = "UCBans"
+rootProject.name = "Punisher"
 

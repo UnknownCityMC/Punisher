@@ -1,4 +1,4 @@
-## UCBans
+## Punisher
 
 #### Commands
 TODO:
