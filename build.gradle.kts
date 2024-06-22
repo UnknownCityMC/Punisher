@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("xyz.jpenilla.run-velocity") version "2.2.2"
+    id("io.github.goooler.shadow") version "8.1.7"
+    id("xyz.jpenilla.run-velocity") version "2.3.0"
     kotlin("jvm") version "1.8.22"
 }
 
@@ -36,6 +36,10 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 tasks{
