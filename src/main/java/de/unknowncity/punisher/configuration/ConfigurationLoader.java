@@ -19,6 +19,11 @@ public class ConfigurationLoader {
         this.plugin = plugin;
     }
 
+    /**
+     * Loads a configuration from a config loader
+     * @param configurationLoader the config loader from which the config is to be loaded
+     * @return a configuration node representing the root of the config tree
+     */
     public Optional<ConfigurationNode> loadConfiguration(org.spongepowered.configurate.loader.ConfigurationLoader<ConfigurationNode> configurationLoader) {
         try {
             return Optional.of(configurationLoader.load());
@@ -28,6 +33,10 @@ public class ConfigurationLoader {
         return Optional.empty();
     }
 
+    /**
+     * Saves a config file from resources to plugin data directory
+     * @param filePath path to the files location in the resource directory
+     */
     public void saveDefaultConfigFile(Path filePath) {
         var completePath = plugin.dataDirectory().resolve(filePath);
         if (Files.exists(completePath) && !PunisherPlugin.IS_DEV_BUILD) {
@@ -51,6 +60,12 @@ public class ConfigurationLoader {
         }
     }
 
+    /**
+     * Save a configuration when changes are made through code
+     * @param configurationNode a config node to which the changes are to be saved
+     * @param configuration the config that changes were made to and that needs to be saved
+     * @param configurationLoader the config loader through which the config was loaded
+     */
     public void saveConfiguration(
             ConfigurationNode configurationNode,
             Configuration configuration,

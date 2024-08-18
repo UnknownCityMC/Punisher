@@ -59,6 +59,8 @@ tasks{
         relocate("de.chojo.sadu", shadeBasePath + "sadu")
         relocate("cloud.commandframework", shadeBasePath + "cloud")
         relocate("redis.clients", shadeBasePath + "redis")
+
+
     }
 
     compileJava {

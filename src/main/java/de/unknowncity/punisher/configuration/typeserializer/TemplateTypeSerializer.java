@@ -27,6 +27,6 @@ public class TemplateTypeSerializer implements TypeSerializer<PunishmentTemplate
 
     @Override
     public void serialize(Type type, @Nullable PunishmentTemplate punishmentTemplate, ConfigurationNode node) throws SerializationException {
-
+        // Config currently does not need to be saved (Replace with AstraLib when it's ready for Velocity)
     }
 }

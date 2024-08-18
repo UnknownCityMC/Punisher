@@ -20,6 +20,6 @@ public class RedisSettingsTypeSerializer implements TypeSerializer<RedisSettings
 
     @Override
     public void serialize(Type type, @Nullable RedisSettings obj, ConfigurationNode node) throws SerializationException {
-
+        // Config currently does not need to be saved (Replace with AstraLib when it's ready for Velocity)
     }
 }

@@ -37,6 +37,6 @@ public class DatabaseSettingsTypeSerializer implements TypeSerializer<DataBaseSe
 
     @Override
     public void serialize(Type type, @Nullable DataBaseSettings obj, ConfigurationNode node) throws SerializationException {
-
+        // Config currently does not need to be saved (Replace with AstraLib when it's ready for Velocity)
     }
 }

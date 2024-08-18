@@ -26,9 +26,7 @@ public class ConfigurationTypeSerializer implements TypeSerializer<Configuration
     }
 
     @Override
-    public void serialize(Type type, @Nullable Configuration configuration, ConfigurationNode node) throws SerializationException {
-        if (configuration != null) {
-
-        }
+    public void serialize(Type type, @Nullable Configuration configuration, ConfigurationNode node) {
+        // Config currently does not need to be saved (Replace with AstraLib when it's ready for Velocity)
     }
 }

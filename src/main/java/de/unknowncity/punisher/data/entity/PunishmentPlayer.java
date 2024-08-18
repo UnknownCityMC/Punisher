@@ -8,6 +8,4 @@ public class PunishmentPlayer {
     public PunishmentPlayer(UUID uuid) {
         this.uuid = uuid;
     }
-
-    
 }

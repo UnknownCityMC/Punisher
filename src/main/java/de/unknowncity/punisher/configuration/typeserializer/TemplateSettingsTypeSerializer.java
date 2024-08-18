@@ -25,6 +25,6 @@ public class TemplateSettingsTypeSerializer implements TypeSerializer<TemplateSe
 
     @Override
     public void serialize(Type type, @Nullable TemplateSettings obj, ConfigurationNode node) throws SerializationException {
-
+        // Config currently does not need to be saved (Replace with AstraLib when it's ready for Velocity)
     }
 }

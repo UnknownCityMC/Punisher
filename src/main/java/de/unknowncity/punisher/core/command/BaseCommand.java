@@ -11,5 +11,10 @@ public abstract class BaseCommand {
         this.plugin = plugin;
     }
 
+    /**
+     * Registers the command to a command manager
+     * Also used to apply the initial command structure like arguments, permissions and sender types
+     * @param commandManager the command manager teh command should be registered to
+     */
     public abstract void register(CommandManager<CommandSource> commandManager);
 }

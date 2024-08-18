@@ -7,6 +7,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+
 public class BukkitFutureResult<T> {
     private final CompletableFuture<T> completableFuture;
 
