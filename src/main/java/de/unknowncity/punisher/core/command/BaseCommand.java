@@ -4,6 +4,11 @@ import cloud.commandframework.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 import de.unknowncity.punisher.PunisherPlugin;
 
+/**
+ * @deprecated
+ * Will be replaced by AstraLib in the near future
+ */
+@Deprecated
 public abstract class BaseCommand {
     protected final PunisherPlugin plugin;
 

@@ -16,6 +16,11 @@ import java.util.concurrent.CompletableFuture;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
+/**
+ * @deprecated
+ * Will be replaced by AstraLib in the near future
+ */
+@Deprecated
 public class UUIDFetcher {
     private static final HashMap<String, UUID> UUIDS = new HashMap<>();
     private static final HashMap<UUID, String> NAMES = new HashMap<>();

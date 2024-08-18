@@ -14,6 +14,11 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @deprecated
+ * Will be replaced by AstraLib in the near future
+ */
+@Deprecated
 public class Messenger {
     private final ConfigurationNode rootNode;
     private final MiniMessage miniMessage;

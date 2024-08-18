@@ -10,6 +10,11 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Level;
 
+/**
+ * @deprecated
+ * Will be replaced by AstraLib in the near future
+ */
+@Deprecated
 public class ConfigurationLoader {
     private final PunisherPlugin plugin;
     private ConfigurationNode mainConfigRootNode;
