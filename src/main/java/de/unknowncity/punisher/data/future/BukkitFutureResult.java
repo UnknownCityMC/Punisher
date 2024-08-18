@@ -7,7 +7,13 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-
+/**
+ * @deprecated
+ * Why is this here? There is no main thread on velocity so this is useless
+ * TODO: Remove and replace all usages
+ * @param <T>
+ */
+@Deprecated
 public class BukkitFutureResult<T> {
     private final CompletableFuture<T> completableFuture;
 
