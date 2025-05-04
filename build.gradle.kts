@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.unknowncity"
-version = "0.1.0"
+version = "0.1.1"
 
 val shadeBasePath = "${group}.${rootProject.name.lowercase()}.libs."
 
@@ -28,9 +28,9 @@ dependencies {
 
     implementation("org.mariadb.jdbc", "mariadb-java-client", "3.3.2")
 
-    annotationProcessor("com.velocitypowered", "velocity-api", "3.3.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered", "velocity-api", "3.4.0-SNAPSHOT")
 
-    compileOnly("com.velocitypowered", "velocity-api", "3.3.0-SNAPSHOT")
+    compileOnly("com.velocitypowered", "velocity-api", "3.4.0-SNAPSHOT")
     compileOnly("me.clip", "placeholderapi", "2.11.5")
 
 
