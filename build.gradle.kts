@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("io.github.goooler.shadow") version "8.1.8"
-    id("xyz.jpenilla.run-velocity") version "2.3.1"
+    id("xyz.jpenilla.run-velocity") version "3.0.2"
     kotlin("jvm") version "2.3.0"
 }
 
