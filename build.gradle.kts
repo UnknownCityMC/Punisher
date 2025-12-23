@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("io.github.goooler.shadow") version "8.1.8"
     id("xyz.jpenilla.run-velocity") version "3.0.2"
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.3.0"
 }
 
 group = "de.unknowncity"
@@ -34,7 +34,7 @@ dependencies {
     compileOnly("me.clip", "placeholderapi", "2.11.5")
 
 
-    testImplementation(platform("org.junit:junit-bom:5.13.4"))
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
