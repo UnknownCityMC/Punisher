@@ -34,7 +34,7 @@ dependencies {
     compileOnly("me.clip", "placeholderapi", "2.11.5")
 
 
-    testImplementation(platform("org.junit:junit-bom:6.0.1"))
+    testImplementation(platform("org.junit:junit-bom:6.0.3"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
